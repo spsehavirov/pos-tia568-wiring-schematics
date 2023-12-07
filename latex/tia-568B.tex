@@ -1,0 +1,70 @@
+\documentclass[border=0.2cm]{standalone}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{tikz}
+\usepackage{siunitx}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{shapes.geometric}
+
+\tikzset{
+    every node/.style={
+        font=\sffamily
+    },
+    msg path/.style={-latex, red, line width=1mm},
+    msg path reverse/.style={latex-, red, line width=1mm},
+    wire width/.style={minimum width=0.1cm},
+    wire/.style={wire width, draw, minimum height=4cm},
+    wire background/.style={wire, fill=white},
+    wire stripe/.style={wire width, trapezium, text = brown, fill = orange!20, trapezium left angle = 120, trapezium right angle = 60, rotate = 90},
+    pin/.style={wire width, minimum height=1.5cm, draw=orange!80, fill=yellow},
+}
+
+\begin{document}
+
+\newcommand{\ActualFill}{none} % Store color
+\newcommand\WireOrder{1/orange, 0/orange, 1/green, 0/blue, 1/blue, 0/green, 1/brown, 0/brown}
+
+\begin{tikzpicture}[
+    every node/.style={font=\sffamily},
+    msg path/.style={-latex, red, line width=1mm},
+    msg path reverse/.style={latex-, red, line width=1mm},
+    wire width/.style={minimum width=0.1cm},
+    wire/.style={wire width, draw, minimum height=4cm},
+    wire background/.style={wire, fill=white},
+    wire stripe/.style={wire width, trapezium, text = brown, fill = orange!20, trapezium left angle = 120, trapezium right angle = 60, rotate = 90},
+    pin/.style={wire width, minimum height=1.5cm, draw=orange!80, fill=yellow},
+]  
+    \foreach[count=\i] \crossing/\WireColor in \WireOrder {
+        \draw (0,0) 
+            ++(0.35*\i,0) coordinate (wire_pos_\i) {} % For Wire 
+            ++(0,.25) coordinate (crossing_pos_\i);   % For stripped ornament
+
+        \draw (wire_pos_\i) node[wire background, anchor=north] (wire_bg_\i) {};
+              
+        \renewcommand{\ActualFill}{\WireColor}
+        \ifnum \crossing=1
+            \foreach \j in {1,...,5} {
+                \draw (crossing_pos_\i |- 0, -0.75*\j) node [wire stripe, fill=\WireColor] {};
+            }
+            \renewcommand{\ActualFill}{none}
+        \fi
+          
+        \draw (wire_pos_\i) 
+                        node[wire, anchor=north, fill=\ActualFill] (wire_\i) {}
+            ++(0, 0.25) node[pin, anchor=south] (pin_\i) {};
+        \draw (wire_\i.south) node[below] (label_\i) { \i };
+    }
+    
+    \begin{scope}[on background layer]
+      \draw node[yshift=-1.5cm, gray!80, fill=gray!3, draw, fit=(pin_1)(pin_2)(pin_3)(pin_4)(pin_5)(pin_6)(pin_7)(pin_8), minimum height=5cm] (connector) {};
+      \draw (connector.north) node[yshift=-0.01cm, anchor=south, gray!80, fill=gray!3, draw, minimum height=0.1cm, minimum width=1cm] (tip) {};
+    \end{scope}
+\end{tikzpicture}
+\end{document}
