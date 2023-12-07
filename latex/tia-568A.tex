@@ -27,6 +27,8 @@
     wire background/.style={wire, fill=white},
     wire stripe/.style={wire width, trapezium, text = brown, fill = orange!20, trapezium left angle = 120, trapezium right angle = 60, rotate = 90},
     pin/.style={wire width, minimum height=1.5cm, draw=orange!80, fill=yellow},
+    connector/.style={gray!80, fill=gray!3, draw, minimum height=5cm},
+    connector tip/.style={anchor=south, gray!80, fill=gray!3, draw, minimum height=0.1cm, minimum width=1cm},
 ]  
     \foreach[count=\i] \crossing/\WireColor in \WireOrder {
         \draw (0,0) 
@@ -50,8 +52,8 @@
     }
     
     \begin{scope}[on background layer]
-      \draw node[yshift=-1.5cm, gray!80, fill=gray!3, draw, fit=(pin_1)(pin_2)(pin_3)(pin_4)(pin_5)(pin_6)(pin_7)(pin_8), minimum height=5cm] (connector) {};
-      \draw (connector.north) node[yshift=-0.01cm, anchor=south, gray!80, fill=gray!3, draw, minimum height=0.1cm, minimum width=1cm] (tip) {};
+      \draw node[connector, yshift=-1.5cm, fit=(pin_1)(pin_2)(pin_3)(pin_4)(pin_5)(pin_6)(pin_7)(pin_8)] (connector) {};
+      \draw (connector.north) node[connector tip, yshift=-0.01cm] (tip) {};
     \end{scope}
 \end{tikzpicture}
 
